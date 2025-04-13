@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Route Planner</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous" onload="console.log('Leaflet CSS loaded')" onerror="loadFallbackLeafletCSS()">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --text-color: #333;
+            --light-text: #666;
+            --panel-bg: #fff;
+            --panel-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            --transition-speed: 0.3s;
+            --border-radius: 8px;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100%;
+            width: 100%;
+            color: var(--text-color);
+            overflow: hidden;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100vw;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            background: #f0f0f0;
+        }
+
+        .map-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        .panel {
+            position: fixed;
+            z-index: 1000;
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--panel-shadow);
+            width: 330px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transition: all var(--transition-speed);
+        }
+
+        .panel::-webkit-scrollbar,
+        .waypoint-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .panel::-webkit-scrollbar-track,
+        .waypoint-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .panel::-webkit-scrollbar-thumb,
+        .waypoint-list::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        .panel::-webkit-scrollbar-thumb:hover,
+        .waypoint-list::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+
+        .control-panel {
+            top: 10px;
+            left: 10px;
+        }
+
+        .route-selector {
+            top: 10px;
+            right: 10px;
+        }
+
+        .panel h3 {
+            margin: 0 0 15px 0;
+            color: var(--text-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2rem;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--light-text);
+            font-weight: 500;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+            transition: border var(--transition-speed);
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .waypoint-list {
+            margin-bottom: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .waypoint-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            border-radius: var(--border-radius);
+            border-left: 4px solid;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .waypoint-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 20px;
+            color: var(--light-text);
+            background: #f9f9f9;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .waypoint-item.start { border-color: var(--secondary-color); }
+        .waypoint-item.end { border-color: var(--danger-color); }
+
+        .waypoint-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--light-text);
+            font-size: 1rem;
+            padding: 5px 8px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .waypoint-remove:hover {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+
+        .waypoint-drag {
+            cursor: grab;
+            padding: 5px;
+            color: var(--light-text);
+        }
+
+        .route-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: var(--border-radius);
+            border-left: 4px solid;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f9f9f9;
+            position: relative;
+        }
+
+        .route-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .route-item.active {
+            background: #e8f0fe;
+        }
+
+        .route-item h4 {
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .route-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .route-meta span {
+            font-size: 0.85rem;
+            color: var(--light-text);
+            display: flex;
+            align-items: center;
+        }
+
+        .route-meta i {
+            margin-right: 5px;
+        }
+
+        .traffic-legend {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            padding: 5px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 4px;
+        }
+
+        .traffic-color {
+            width: 25px;
+            height: 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .button-primary {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background var(--transition-speed);
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .button-primary:hover {
+            background: #2980b9;
+        }
+
+        .button-secondary {
+            background: #6c757d;
+        }
+
+        .button-secondary:hover {
+            background: #5a6268;
+        }
+
+        .button-danger {
+            background: var(--danger-color);
+        }
+
+        .button-danger:hover {
+            background: #c0392b;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        .minimize-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--light-text);
+            padding: 0 5px;
+            width: auto;
+            transition: color var(--transition-speed);
+        }
+
+        .minimize-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .panel.minimized {
+            width: auto;
+            height: auto;
+            padding: 10px;
+        }
+
+        .panel.minimized .panel-content,
+        .panel.minimized .panel-title {
+            display: none;
+        }
+
+        .instructions {
+            font-size: 0.85rem;
+            color: var(--light-text);
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .travel-mode-selector {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .travel-mode-selector button {
+            flex: 1;
+            padding: 10px;
+            font-size: 0.9rem;
+            background: #f1f1f1;
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .travel-mode-selector button i {
+            font-size: 1.2rem;
+        }
+
+        .travel-mode-selector button:hover {
+            background: #e9e9e9;
+        }
+
+        .travel-mode-selector button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .coordinates-display {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+            color: var(--text-color);
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .step-list {
+            margin: 10px 0;
+            padding-left: 0;
+            list-style-type: none;
+        }
+
+        .step-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .step-list li:last-child {
+            border-bottom: none;
+        }
+
+        .step-list li i {
+            color: var(--primary-color);
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .route-badges {
+            display: flex;
+            gap: 5px;
+            margin-top: 3px;
+        }
+
+        .route-badge {
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--primary-color);
+        }
+
+        .route-badge.fastest {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .route-badge.traffic {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+
+        .loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: var(--border-radius);
+            z-index: 10;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 10px 10px 35px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text);
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            z-index: 5;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .search-result-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-result-item:hover {
+            background: #f5f5f5;
+        }
+
+        .search-result-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .search-result-address {
+            font-size: 0.8rem;
+            color: var(--light-text);
+        }
+
+        .route-tooltip {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--light-text);
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .eta-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--secondary-color);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+
+        .collapsible-content {
+            height: 0;
+            overflow: hidden;
+            transition: height var(--transition-speed);
+        }
+
+        .collapsible-content.open {
+            height: auto;
+        }
+
+        .collapsible-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: var(--border-radius);
+            margin-bottom: 5px;
+        }
+
+        .collapsible-header:hover {
+            background: #f1f1f1;
+        }
+
+        .dark-mode {
+            --panel-bg: #2d3436;
+            --text-color: #f5f5f5;
+            --light-text: #dfe6e9;
+            --panel-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .dark-mode input,
+        .dark-mode select {
+            background: #2c3e50;
+            border-color: #34495e;
+            color: #ecf0f1;
+        }
+
+        .dark-mode .waypoint-item,
+        .dark-mode .route-item,
+        .dark-mode .instructions,
+        .dark-mode .empty-state,
+        .dark-mode .collapsible-header {
+            background: #34495e;
+        }
+
+        .dark-mode .step-list li {
+            border-color: #34495e;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 50px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        .dark-mode .theme-toggle {
+            background: #34495e;
+            color: #f5f5f5;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            max-width: 400px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .notification.show {
+            opacity: 1;
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+        }
+
+        .notification.success i {
+            color: var(--secondary-color);
+        }
+
+        .notification.warning i {
+            color: var(--warning-color);
+        }
+
+        .notification.error i {
+            color: var(--danger-color);
+        }
+
+        .print-button {
+            position: fixed;
+            bottom: 100px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        .dark-mode .print-button {
+            background: #34495e;
+            color: #f5f5f5;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .panel {
+                width: calc(100% - 20px);
+                max-width: none;
+                left: 10px !important;
+                right: 10px !important;
+            }
+            
+            .control-panel {
+                top: 10px;
+            }
+            
+            .route-selector {
+                top: auto;
+                bottom: 10px;
+            }
+            
+            .coordinates-display {
+                bottom: auto;
+                top: 70px;
+                font-size: 0.8rem;
+            }
+            
+            .theme-toggle {
+                bottom: auto;
+                top: 70px;
+                left: 10px;
+                right: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="map">
+        <div class="map-loading" id="mapLoading">
+            <div class="spinner"></div>
+        </div>
+    </div>
+    <div class="panel control-panel" id="controlPanel">
+        <h3>
+            <span class="panel-title">Advanced Route Planner</span>
+            <button class="minimize-btn" title="Minimize panel"><i class="fa-solid fa-minus"></i></button>
+        </h3>
+        <div class="panel-content">
+            <div class="instructions">
+                <i class="fa-solid fa-info-circle"></i> Click on the map or search for locations to add start and end points.
+            </div>
+            
+            <div class="search-container">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="location-search" placeholder="Search for a location..." autocomplete="off">
+                <div class="search-results" id="search-results" style="display: none;"></div>
+            </div>
+            
+            <div class="travel-mode-selector">
+                <button class="mode-btn active" data-mode="driving">
+                    <i class="fa-solid fa-car"></i>
+                    <span>Driving</span>
+                </button>
+                <button class="mode-btn" data-mode="walking">
+                    <i class="fa-solid fa-person-walking"></i>
+                    <span>Walking</span>
+                </button>
+                <button class="mode-btn" data-mode="cycling">
+                    <i class="fa-solid fa-bicycle"></i>
+                    <span>Cycling</span>
+                </button>
+            </div>
+            
+            <div class="waypoint-list" id="waypointList"></div>
+            
+            <div class="input-group">
+                <label><i class="fa-solid fa-location-dot"></i> New Waypoint (Manual Coordinates)</label>
+                <div style="display: flex; gap: 5px;">
+                    <input type="number" step="any" id="new_lat" placeholder="Latitude" required>
+                    <input type="number" step="any" id="new_lon" placeholder="Longitude" required>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="button-primary" id="addWaypointBtn" title="Add waypoint">
+                    <i class="fa-solid fa-plus"></i> Add Point
+                </button>
+                <button type="button" class="button-primary button-danger" id="clearWaypointsBtn" title="Clear waypoints">
+                    <i class="fa-solid fa-trash"></i> Clear
+                </button>
+            </div>
+            
+            <button type="button" class="button-primary" id="generateRoutesBtn" title="Generate routes">
+                <i class="fa-solid fa-route"></i> Generate Routes
+            </button>
+            
+            <div class="collapsible-header" data-collapsible-id="options-content">
+                <span><i class="fa-solid fa-sliders"></i> Advanced Options</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="collapsible-content" id="options-content">
+                <div class="input-group">
+                    <label>Departure Time</label>
+                    <select id="departure-time">
+                        <option value="now">Leave now</option>
+                        <option value="15min">Leave in 15 minutes</option>
+                        <option value="30min">Leave in 30 minutes</option>
+                        <option value="1hour">Leave in 1 hour</option>
+                        <option value="2hours">Leave in 2 hours</option>
+                        <option value="custom">Custom time...</option>
+                    </select>
+                </div>
+                
+                <div class="input-group" id="custom-time-container" style="display:none;">
+                    <label>Custom Departure Time</label>
+                    <input type="datetime-local" id="custom-departure-time">
+                </div>
+                
+                <div class="input-group">
+                    <label>Route Preferences</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;">
+                        <label style="display: flex; align-items: center; margin-right: 10px;">
+                            <input type="checkbox" id="avoid-highways"> Highways
+                        </label>
+                        <label style="display: flex; align-items: center; margin-right: 10px;">
+                            <input type="checkbox" id="avoid-tolls"> Tolls
+                        </label>
+                        <label style="display: flex; align-items: center;">
+                            <input type="checkbox" id="avoid-ferries"> Ferries
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="panel route-selector" id="routeSelector">
+        <h3>
+            <span class="panel-title">Available Routes (0)</span>
+            <button class="minimize-btn" title="Minimize panel"><i class="fa-solid fa-minus"></i></button>
+        </h3>
+        <div class="panel-content">
+            <div class="empty-state">
+                <i class="fa-solid fa-route"></i>
+                <p>Add start and end points to see available routes</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="coordinates-display" id="coordinatesDisplay">
+        <i class="fa-solid fa-crosshairs"></i>
+        <span>Lat: 0.000000, Lng: 0.000000</span>
+    </div>
+    
+    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+        <i class="fa-solid fa-sun"></i>
+    </button>
+    
+    <button class="print-button" id="printButton" title="Print or share route">
+        <i class="fa-solid fa-print"></i>
+    </button>
+
+    <div id="notification" class="notification">
+        <i class="fa-solid fa-info-circle"></i>
+        <span id="notification-text"></span>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous" onload="console.log('Leaflet JS loaded')" onerror="loadFallbackLeafletJS()"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" crossorigin="anonymous"></script>
+    <script>
+        // Fallback for Leaflet CSS
+        function loadFallbackLeafletCSS() {
+            console.warn('Leaflet CSS failed, loading fallback');
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+            link.crossOrigin = 'anonymous';
+            document.head.appendChild(link);
+            showNotification('Using fallback Leaflet CSS', 'warning');
+        }
+
+        // Fallback for Leaflet JS
+        function loadFallbackLeafletJS() {
+            console.warn('Leaflet JS failed, loading fallback');
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+            script.crossOrigin = 'anonymous';
+            script.onload = () => console.log('Fallback Leaflet JS loaded');
+            document.body.appendChild(script);
+            showNotification('Using fallback Leaflet JS', 'warning');
+        }
+
+        (function() {
+            // State management
+            const state = {
+                waypoints: [],
+                markers: [],
+                activeRoute: null,
+                routeLayers: {},
+                darkMode: false,
+                searchResults: [],
+                isLoading: false
+            };
+
+            // Map and tile layer globals
+            let map, tileLayer;
+
+            // Debounce utility
+            function debounce(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func(...args), wait);
+                };
+            }
+
+            // Initialize map
+            function initMap() {
+                console.log('Initializing map...');
+                const mapContainer = document.getElementById('map');
+                if (!mapContainer) {
+                    console.error('Map container #map not found');
+                    showNotification('Map container not found', 'error');
+                    return false;
+                }
+
+                // Ensure container dimensions
+                mapContainer.style.width = '100vw';
+                mapContainer.style.height = '100vh';
+                mapContainer.style.position = 'absolute';
+                mapContainer.style.top = '0';
+                mapContainer.style.left = '0';
+                mapContainer.style.zIndex = '1';
+                mapContainer.style.display = 'block';
+
+                try {
+                    map = L.map(mapContainer, {
+                        center: [51.505, -0.09],
+                        zoom: 13,
+                        zoomControl: true,
+                        attributionControl: true,
+                        preferCanvas: true
+                    });
+
+                    // Try multiple tile providers
+                    const tileProviders = [
+                        {
+                            url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+                            options: {
+                                attribution: '© <a href="https://carto.com/attributions">CARTO</a>',
+                                maxZoom: 20,
+                                subdomains: 'abcd'
+                            }
+                        },
+                        {
+                            url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            options: {
+                                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                                maxZoom: 19
+                            }
+                        },
+                        {
+                            url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg',
+                            options: {
+                                attribution: '© <a href="http://stamen.com">Stamen Design</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                                maxZoom: 18,
+                                subdomains: 'abcd'
+                            }
+                        }
+                    ];
+
+                    let currentProviderIndex = 0;
+
+                    function loadTileLayer() {
+                        const provider = tileProviders[currentProviderIndex];
+                        tileLayer = L.tileLayer(provider.url, provider.options).addTo(map);
+                        console.log(`Trying tile provider: ${provider.url}`);
+
+                        tileLayer.on('tileerror', (error) => {
+                            console.error(`Tile error for ${provider.url}:`, error);
+                            currentProviderIndex = (currentProviderIndex + 1) % tileProviders.length;
+                            showNotification(`Failed to load map tiles. Trying next provider...`, 'warning');
+                            map.removeLayer(tileLayer);
+                            if (currentProviderIndex === 0) {
+                                showNotification('All tile providers failed. Check network.', 'error');
+                                return;
+                            }
+                            loadTileLayer();
+                        });
+
+                        tileLayer.on('load', () => {
+                            console.log(`Tile layer loaded: ${provider.url}`);
+                            const loadingDiv = document.getElementById('mapLoading');
+                            if (loadingDiv) loadingDiv.style.display = 'none';
+                            checkMapVisibility();
+                            invalidateMap();
+                        });
+                    }
+
+                    loadTileLayer();
+
+                    // Hide spinner after 10s if tiles don't load
+                    setTimeout(() => {
+                        const loadingDiv = document.getElementById('mapLoading');
+                        if (loadingDiv && loadingDiv.style.display !== 'none') {
+                            console.warn('Tile loading timeout');
+                            loadingDiv.style.display = 'none';
+                            showNotification('Map loading timed out. Partial map may be visible.', 'warning');
+                        }
+                    }, 10000);
+
+                    setTimeout(() => {
+                        checkMapVisibility();
+                        invalidateMap();
+                        console.log('Map initialized:', map.getBounds().toBBoxString());
+                    }, 500);
+
+                    return true;
+                } catch (e) {
+                    console.error('Leaflet initialization failed:', e);
+                    showNotification('Failed to initialize map: ' + e.message, 'error');
+                    return false;
+                }
+            }
+
+            function checkMapVisibility() {
+                const mapContainer = document.getElementById('map');
+                const rect = mapContainer.getBoundingClientRect();
+                if (rect.width === 0 || rect.height === 0) {
+                    console.warn('Map container has zero dimensions');
+                    showNotification('Map not visible. Forcing redraw.', 'warning');
+                    mapContainer.style.display = 'block';
+                    invalidateMap();
+                }
+            }
+
+            const invalidateMap = debounce(() => {
+                if (map) {
+                    map.invalidateSize();
+                    if (tileLayer) tileLayer.redraw();
+                    console.log('Map invalidated');
+                }
+            }, 100);
+
+            window.addEventListener('resize', invalidateMap);
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        map.setView([position.coords.latitude, position.coords.longitude], 13);
+                        console.log('Geolocation set:', position.coords);
+                        showNotification('Location found', 'success');
+                        invalidateMap();
+                    },
+                    error => {
+                        console.warn('Geolocation error:', error.message);
+                        showNotification('Unable to get location.', 'warning');
+                    },
+                    { timeout: 10000, maximumAge: 60000 }
+                );
+            }
+
+            const startIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34]
+            });
+
+            const endIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34]
+            });
+
+            function togglePanel(panelId) {
+                const panel = document.getElementById(panelId);
+                panel.classList.toggle('minimized');
+                const btn = panel.querySelector('.minimize-btn i');
+                btn.className = panel.classList.contains('minimized') ? 'fa-solid fa-plus' : 'fa-solid fa-minus';
+                setTimeout(invalidateMap, 300);
+            }
+
+            document.getElementById('themeToggle').addEventListener('click', toggleDarkMode);
+            document.getElementById('departure-time').addEventListener('change', handleDepartureTimeChange);
+            document.getElementById('location-search').addEventListener('input', debounce(handleLocationSearch, 500));
+            document.getElementById('printButton').addEventListener('click', printRoute);
+            document.getElementById('addWaypointBtn').addEventListener('click', addWaypoint);
+            document.getElementById('clearWaypointsBtn').addEventListener('click', clearWaypoints);
+            document.getElementById('generateRoutesBtn').addEventListener('click', generateRoutes);
+
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', handleTravelModeChange);
+            });
+
+            document.querySelectorAll('.minimize-btn').forEach(button => {
+                button.addEventListener('click', () => togglePanel(button.closest('.panel').id));
+            });
+
+            document.querySelectorAll('.collapsible-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const id = header.dataset.collapsibleId;
+                    toggleCollapsible(id);
+                });
+            });
+
+            document.getElementById('routeSelector').addEventListener('click', (e) => {
+                const routeItem = e.target.closest('.route-item');
+                if (routeItem) highlightRoute(routeItem.id);
+            });
+
+            document.getElementById('search-results').addEventListener('click', (e) => {
+                const item = e.target.closest('.search-result-item');
+                if (item) {
+                    const index = parseInt(item.dataset.index);
+                    const result = state.searchResults[index];
+                    selectSearchResult(result.lat, result.lon, result.display_name);
+                }
+            });
+
+            function initApp() {
+                console.log('Initializing app...');
+                document.getElementById('mapLoading').style.display = 'flex';
+                if (!initMap()) {
+                    console.error('Map initialization failed');
+                    return;
+                }
+                map.on('click', handleMapClick);
+                map.on('mousemove', updateCoordinatesDisplay);
+                updateWaypointsList();
+                loadSavedState();
+                checkDarkModePreference();
+                console.log('App initialized');
+            }
+
+            function loadSavedState() {
+                try {
+                    const savedWaypoints = localStorage.getItem('routePlanner_waypoints');
+                    if (savedWaypoints) {
+                        state.waypoints = JSON.parse(savedWaypoints);
+                        state.waypoints.forEach(wp => addMarkerToMap(wp));
+                        updateWaypointsList();
+                        if (state.waypoints.length === 2) {
+                            setTimeout(generateRoutes, 500);
+                        }
+                    }
+                    const darkMode = localStorage.getItem('routePlanner_darkMode') === 'true';
+                    if (darkMode) toggleDarkMode();
+                } catch (error) {
+                    console.error('Error loading state:', error);
+                    showNotification('Failed to load saved data.', 'error');
+                }
+            }
+
+            function saveState() {
+                try {
+                    localStorage.setItem('routePlanner_waypoints', JSON.stringify(state.waypoints));
+                    localStorage.setItem('routePlanner_darkMode', state.darkMode);
+                } catch (error) {
+                    console.error('Error saving state:', error);
+                    showNotification('Failed to save data.', 'error');
+                }
+            }
+
+            function handleMapClick(e) {
+                if (state.waypoints.length >= 2) {
+                    showNotification('Only 2 waypoints allowed.', 'warning');
+                    return;
+                }
+                const coords = { lat: e.latlng.lat, lng: e.latlng.lng };
+                addWaypointToState(coords);
+            }
+
+            function addWaypointToState(coords, name = '') {
+                state.waypoints.push({ lat: coords.lat, lng: coords.lng, name });
+                addMarkerToMap(coords);
+                updateWaypointsList();
+                saveState();
+                if (state.waypoints.length === 2) generateRoutes();
+            }
+
+            function addMarkerToMap(coords) {
+                const isStart = state.markers.length === 0;
+                const marker = L.marker([coords.lat, coords.lng], {
+                    icon: isStart ? startIcon : endIcon,
+                    draggable: true
+                }).addTo(map);
+
+                marker.on('dragend', e => {
+                    const index = state.markers.indexOf(marker);
+                    state.waypoints[index] = {
+                        lat: e.target.getLatLng().lat,
+                        lng: e.target.getLatLng().lng,
+                        name: state.waypoints[index].name
+                    };
+                    updateWaypointsList();
+                    saveState();
+                    if (state.waypoints.length === 2) generateRoutes();
+                });
+
+                state.markers.push(marker);
+                invalidateMap();
+            }
+
+            function updateWaypointsList() {
+                const list = document.getElementById('waypointList');
+                list.innerHTML = state.waypoints.length === 0 ?
+                    `<div class="empty-state">
+                        <i class="fa-solid fa-map-pin"></i>
+                        <p>Click map or search to add waypoints</p>
+                    </div>` : '';
+
+                state.waypoints.forEach((wp, index) => {
+                    const item = document.createElement('div');
+                    item.className = `waypoint-item ${index === 0 ? 'start' : 'end'}`;
+                    item.innerHTML = `
+                        <i class="fa-solid fa-grip-vertical waypoint-drag"></i>
+                        <div>
+                            <strong>${index === 0 ? 'Start' : 'End'}</strong>
+                            ${wp.name ? `<div>${wp.name}</div>` : ''}
+                            <div style="font-size: 0.8em; color: var(--light-text);">
+                                ${wp.lat.toFixed(6)}, ${wp.lng.toFixed(6)}
+                            </div>
+                        </div>
+                        <button class="waypoint-remove" data-index="${index}" title="Remove waypoint">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    `;
+                    list.appendChild(item);
+                });
+
+                list.querySelectorAll('.waypoint-remove').forEach(btn => {
+                    btn.addEventListener('click', () => removeWaypoint(parseInt(btn.dataset.index)));
+                });
+
+                try {
+                    new Sortable(list, {
+                        animation: 150,
+                        handle: '.waypoint-drag',
+                        onEnd: (evt) => {
+                            const [moved] = state.waypoints.splice(evt.oldIndex, 1);
+                            state.waypoints.splice(evt.newIndex, 0, moved);
+                            updateMarkersAfterSort();
+                            updateWaypointsList();
+                            if (state.waypoints.length === 2) generateRoutes();
+                        }
+                    });
+                } catch (error) {
+                    console.warn('Sortable failed:', error);
+                    showNotification('Drag-and-drop unavailable.', 'warning');
+                }
+                invalidateMap();
+            }
+
+            function updateMarkersAfterSort() {
+                state.markers.forEach((marker, index) => {
+                    marker.setLatLng([state.waypoints[index].lat, state.waypoints[index].lng]);
+                    marker.setIcon(index === 0 ? startIcon : endIcon);
+                });
+                invalidateMap();
+            }
+
+            function removeWaypoint(index) {
+                state.waypoints.splice(index, 1);
+                map.removeLayer(state.markers[index]);
+                state.markers.splice(index, 1);
+                updateWaypointsList();
+                clearRoutes();
+                saveState();
+            }
+
+            function clearWaypoints() {
+                state.waypoints = [];
+                state.markers.forEach(marker => map.removeLayer(marker));
+                state.markers = [];
+                updateWaypointsList();
+                clearRoutes();
+                saveState();
+                showNotification('Waypoints cleared', 'success');
+            }
+
+            function addWaypoint() {
+                if (state.waypoints.length >= 2) {
+                    showNotification('Only 2 waypoints allowed', 'warning');
+                    return;
+                }
+                const lat = parseFloat(document.getElementById('new_lat').value);
+                const lng = parseFloat(document.getElementById('new_lon').value);
+                if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+                    showNotification('Invalid coordinates', 'error');
+                    return;
+                }
+                addWaypointToState({ lat, lng });
+                document.getElementById('new_lat').value = '';
+                document.getElementById('new_lon').value = '';
+            }
+
+            async function generateRoutes() {
+                if (state.waypoints.length !== 2) {
+                    showNotification('Need exactly 2 waypoints', 'warning');
+                    return;
+                }
+
+                toggleLoading(true);
+                const mode = document.querySelector('.mode-btn.active').dataset.mode;
+                const preferences = {
+                    avoid_highways: document.getElementById('avoid-highways').checked,
+                    avoid_tolls: document.getElementById('avoid-tolls').checked,
+                    avoid_ferries: document.getElementById('avoid-ferries').checked
+                };
+                const departureTime = getDepartureTime();
+
+                const payload = {
+                    waypoints: state.waypoints.map(wp => ({
+                        lat: wp.lat,
+                        lng: wp.lng,
+                        name: wp.name || ''
+                    })),
+                    mode,
+                    preferences,
+                    departureTime
+                };
+
+                try {
+                    console.log('Fetching routes from API:', payload);
+                    const response = await fetch('http://localhost:5000/api/routes', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || `HTTP ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('API response:', data);
+
+                    clearRoutes();
+                    renderRoutes(data.routes);
+                    if (data.bounds && data.bounds.length === 4) {
+                        map.fitBounds([
+                            [data.bounds[0], data.bounds[1]],
+                            [data.bounds[2], data.bounds[3]]
+                        ]);
+                    } else {
+                        map.fitBounds([
+                            [state.waypoints[0].lat, state.waypoints[0].lng],
+                            [state.waypoints[1].lat, state.waypoints[1].lng]
+                        ]);
+                    }
+                    if (data.routes.length > 0) highlightRoute(data.routes[0].id);
+                    showNotification('Routes generated', 'success');
+                } catch (error) {
+                    console.error('Route generation failed:', error);
+                    showNotification(`Failed to generate routes: ${error.message}`, 'error');
+                    // Fallback: Render a straight-line route
+                    const fallbackRoute = [{
+                        id: 'fallback_route',
+                        title: 'Fallback Route',
+                        eta: 'N/A',
+                        distance_km: calculateHaversineDistance(
+                            state.waypoints[0].lat, state.waypoints[0].lng,
+                            state.waypoints[1].lat, state.waypoints[1].lng
+                        ).toFixed(1),
+                        duration_min: null,
+                        traffic_segments: [{ efficiency: 0.5 }],
+                        coordinates: [
+                            [state.waypoints[0].lat, state.waypoints[0].lng],
+                            [state.waypoints[1].lat, state.waypoints[1].lng]
+                        ],
+                        steps: []
+                    }];
+                    clearRoutes();
+                    renderRoutes(fallbackRoute);
+                    map.fitBounds([
+                        [state.waypoints[0].lat, state.waypoints[0].lng],
+                        [state.waypoints[1].lat, state.waypoints[1].lng]
+                    ]);
+                    highlightRoute(fallbackRoute[0].id);
+                    showNotification('Showing fallback route due to error', 'warning');
+                } finally {
+                    toggleLoading(false);
+                    invalidateMap();
+                }
+            }
+
+            function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371; // Earth's radius in km
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                          Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            }
+
+            function renderRoutes(routes) {
+                const selector = document.getElementById('routeSelector');
+                selector.innerHTML = `
+                    <h3>
+                        <span class="panel-title">Available Routes (${routes.length})</span>
+                        <button class="minimize-btn" title="Minimize panel"><i class="fa-solid fa-minus"></i></button>
+                    </h3>
+                    <div class="panel-content">
+                        ${routes.length === 0 ? 
+                            `<div class="empty-state">
+                                <i class="fa-solid fa-route"></i>
+                                <p>No routes available</p>
+                            </div>` : 
+                            routes.map((route, i) => {
+                                const avgTraffic = route.traffic_segments ? 
+                                    route.traffic_segments.reduce((sum, seg) => sum + seg.efficiency, 0) / route.traffic_segments.length : 0.5;
+                                const trafficColor = route.traffic_colors && route.traffic_colors[i] ? 
+                                    route.traffic_colors[i].color : 
+                                    (avgTraffic >= 0.7 ? '#2ecc71' : avgTraffic >= 0.4 ? '#f39c12' : '#e74c3c');
+
+                                const coords = route.coordinates ? route.coordinates.map(c => [c[0], c[1]]) : [];
+                                if (coords.length > 1) {
+                                    const layer = L.polyline(coords, {
+                                        color: trafficColor,
+                                        weight: i === 0 ? 10 : 6,
+                                        opacity: i === 0 ? 1 : 0.7,
+                                        name: route.id
+                                    }).addTo(map);
+                                    state.routeLayers[`${route.id}_0`] = layer;
+                                }
+
+                                return `
+                                    <div class="route-item" id="${route.id}" style="border-left-color: ${trafficColor}">
+                                        <div class="route-tooltip" title="Route Details">?</div>
+                                        <h4>
+                                            ${route.title || `Route ${i + 1}`}
+                                            <span class="eta-badge">${route.eta || 'N/A'}</span>
+                                        </h4>
+                                        <div class="route-meta">
+                                            <span><i class="fa-solid fa-road"></i> ${route.distance_km ? route.distance_km.toFixed(1) : 'N/A'} km</span>
+                                            <span><i class="fa-solid fa-clock"></i> ${route.duration_min ? route.duration_min.toFixed(1) : 'N/A'} min</span>
+                                        </div>
+                                        <div class="route-badges">
+                                            ${i === 0 ? '<span class="route-badge fastest">Fastest</span>' : ''}
+                                            <span class="route-badge traffic">${avgTraffic >= 0.7 ? 'Good' : avgTraffic >= 0.4 ? 'Moderate' : 'Heavy'} Traffic</span>
+                                        </div>
+                                        <ul class="step-list">
+                                            ${route.steps ? route.steps.map(step => `
+                                                <li><i class="fa-solid fa-arrow-right"></i> ${step.instruction}</li>
+                                            `).join('') : '<li>No steps available</li>'}
+                                        </ul>
+                                        <div class="traffic-legend">
+                                            Traffic:
+                                            <span class="traffic-color" style="background: #2ecc71"></span>Good
+                                            <span class="traffic-color" style="background: #f39c12"></span>Moderate
+                                            <span class="traffic-color" style="background: #e74c3c"></span>Heavy
+                                        </div>
+                                    </div>`;
+                            }).join('')}
+                    </div>`;
+                invalidateMap();
+            }
+
+            function clearRoutes() {
+                Object.keys(state.routeLayers).forEach(key => {
+                    map.removeLayer(state.routeLayers[key]);
+                    delete state.routeLayers[key];
+                });
+                state.activeRoute = null;
+                document.getElementById('routeSelector').innerHTML = `
+                    <h3>
+                        <span class="panel-title">Available Routes (0)</span>
+                        <button class="minimize-btn" title="Minimize panel"><i class="fa-solid fa-minus"></i></button>
+                    </h3>
+                    <div class="panel-content">
+                        <div class="empty-state">
+                            <i class="fa-solid fa-route"></i>
+                            <p>Add start and end points to see available routes</p>
+                        </div>
+                    </div>`;
+                invalidateMap();
+            }
+
+            function highlightRoute(routeId) {
+                if (state.activeRoute) {
+                    const prevRoute = document.getElementById(state.activeRoute);
+                    if (prevRoute) prevRoute.classList.remove('active');
+                    Object.keys(state.routeLayers).forEach(key => {
+                        if (key.startsWith(state.activeRoute)) {
+                            state.routeLayers[key].setStyle({ weight: 6, opacity: 0.7 });
+                        }
+                    });
+                }
+                state.activeRoute = routeId;
+                const currentRoute = document.getElementById(routeId);
+                if (currentRoute) currentRoute.classList.add('active');
+                Object.keys(state.routeLayers).forEach(key => {
+                    if (key.startsWith(routeId)) {
+                        state.routeLayers[key].setStyle({ weight: 12, opacity: 1 });
+                    }
+                });
+                const firstLayer = state.routeLayers[`${routeId}_0`];
+                if (firstLayer) map.fitBounds(firstLayer.getBounds());
+                invalidateMap();
+            }
+
+            function updateCoordinatesDisplay(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                document.getElementById('coordinatesDisplay').querySelector('span').textContent = 
+                    `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+            }
+
+            function toggleDarkMode() {
+                state.darkMode = !state.darkMode;
+                document.body.classList.toggle('dark-mode');
+                const toggle = document.getElementById('themeToggle');
+                toggle.innerHTML = state.darkMode ? 
+                    '<i class="fa-solid fa-moon"></i>' : 
+                    '<i class="fa-solid fa-sun"></i>';
+                
+                map.removeLayer(tileLayer);
+                tileLayer = L.tileLayer(state.darkMode ? 
+                    'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' : 
+                    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '© <a href="https://carto.com/attributions">CARTO</a>',
+                    maxZoom: 20,
+                    subdomains: 'abcd'
+                }).addTo(map);
+
+                tileLayer.on('tileerror', (error) => {
+                    console.error('Tile error in dark mode:', error);
+                    showNotification('Failed to load map tiles', 'error');
+                });
+
+                tileLayer.on('load', () => {
+                    console.log('Tile layer switched for dark mode:', state.darkMode);
+                    document.getElementById('mapLoading').style.display = 'none';
+                    invalidateMap();
+                });
+
+                saveState();
+                invalidateMap();
+            }
+
+            function checkDarkModePreference() {
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('routePlanner_darkMode')) {
+                    toggleDarkMode();
+                }
+            }
+
+            function handleTravelModeChange() {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                if (state.waypoints.length === 2) generateRoutes();
+            }
+
+            function handleDepartureTimeChange(e) {
+                const customContainer = document.getElementById('custom-time-container');
+                customContainer.style.display = e.target.value === 'custom' ? 'block' : 'none';
+                if (e.target.value !== 'custom' && state.waypoints.length === 2) generateRoutes();
+            }
+
+            function getDepartureTime() {
+                const select = document.getElementById('departure-time').value;
+                if (select === 'custom') {
+                    return document.getElementById('custom-departure-time').value;
+                }
+                const now = new Date();
+                switch (select) {
+                    case '15min': return new Date(now.getTime() + 15 * 60000).toISOString();
+                    case '30min': return new Date(now.getTime() + 30 * 60000).toISOString();
+                    case '1hour': return new Date(now.getTime() + 60 * 60000).toISOString();
+                    case '2hours': return new Date(now.getTime() + 120 * 60000).toISOString();
+                    default: return 'now';
+                }
+            }
+
+            function toggleCollapsible(id) {
+                const content = document.getElementById(id);
+                const header = content.previousElementSibling;
+                content.classList.toggle('open');
+                header.querySelector('.fa-chevron-down').classList.toggle('fa-chevron-up');
+                invalidateMap();
+            }
+
+            function showNotification(message, type, timeout = 5000) {
+                const notification = document.getElementById('notification');
+                const text = document.getElementById('notification-text');
+                text.textContent = message;
+                notification.className = `notification ${type} show`;
+                setTimeout(() => notification.classList.remove('show'), timeout);
+            }
+
+            function toggleLoading(isLoading) {
+                state.isLoading = isLoading;
+                const routeSelector = document.getElementById('routeSelector');
+                const loadingDiv = routeSelector.querySelector('.loading');
+                if (isLoading && !loadingDiv) {
+                    routeSelector.innerHTML += '<div class="loading"><div class="spinner"></div></div>';
+                } else if (!isLoading && loadingDiv) {
+                    loadingDiv.remove();
+                }
+            }
+
+            function handleLocationSearch(e) {
+                const query = e.target.value.trim();
+                if (query.length < 3) {
+                    document.getElementById('search-results').style.display = 'none';
+                    return;
+                }
+
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`, {
+                    headers: { 'User-Agent': 'AdvancedRoutePlanner/1.0' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    state.searchResults = data;
+                    renderSearchResults();
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
+                    showNotification(`Search error: ${error.message}`, 'error');
+                });
+            }
+
+            function renderSearchResults() {
+                const resultsDiv = document.getElementById('search-results');
+                resultsDiv.style.display = state.searchResults.length ? 'block' : 'none';
+                resultsDiv.innerHTML = state.searchResults.map((result, index) => `
+                    <div class="search-result-item" data-index="${index}">
+                        <div class="search-result-name">${result.display_name.split(',')[0]}</div>
+                        <div class="search-result-address">${result.display_name.split(',').slice(1).join(',')}</div>
+                    </div>
+                `).join('');
+            }
+
+            function selectSearchResult(lat, lon, name) {
+                if (state.waypoints.length >= 2) {
+                    showNotification('Only 2 waypoints allowed.', 'warning');
+                    return;
+                }
+                addWaypointToState({ lat: parseFloat(lat), lng: parseFloat(lon) }, name);
+                document.getElementById('location-search').value = '';
+                document.getElementById('search-results').style.display = 'none';
+            }
+
+            function printRoute() {
+                if (!state.activeRoute) {
+                    showNotification('Select a route to print', 'warning');
+                    return;
+                }
+                const routeElement = document.getElementById(state.activeRoute);
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Route Print</title>
+                            <style>
+                                body { font-family: 'Segoe UI', sans-serif; padding: 20px; }
+                                h4 { margin: 0 0 10px; }
+                                .route-meta span { margin-right: 15px; }
+                                .step-list { list-style: none; padding: 0; }
+                                .step-list li { margin: 5px 0; }
+                                .traffic-legend { margin-top: 10px; }
+                                .traffic-color { display: inline-block; width: 20px; height: 5px; vertical-align: middle; }
+                            </style>
+                        </head>
+                        <body>
+                            ${routeElement ? routeElement.innerHTML : '<p>No route selected</p>'}
+                            <script>window.print(); setTimeout(() => window.close(), 1000);</script>
+                        </body>
+                    </html>
+                `);
+                printWindow.document.close();
+            }
+
+            try {
+                document.addEventListener('DOMContentLoaded', () => {
+                    console.log('DOM loaded, starting app');
+                    initApp();
+                });
+            } catch (e) {
+                console.error('Application error:', e);
+                showNotification('Application failed to start: ' + e.message, 'error');
+            }
+        })();
+    </script>
+</body>
+</html>
