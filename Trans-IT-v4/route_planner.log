@@ -1,0 +1,279 @@
+2025-04-12 18:18:38,033 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 18:18:38,033 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 18:18:38,044 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 18:18:38,632 WARNING:  * Debugger is active!
+2025-04-12 18:18:38,645 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 18:18:40,722 INFO: 127.0.0.1 - - [12/Apr/2025 18:18:40] "[33mGET / HTTP/1.1[0m" 404 -
+2025-04-12 18:18:43,071 INFO: 127.0.0.1 - - [12/Apr/2025 18:18:43] "[33mGET / HTTP/1.1[0m" 404 -
+2025-04-12 18:18:44,804 INFO: 127.0.0.1 - - [12/Apr/2025 18:18:44] "[33mGET / HTTP/1.1[0m" 404 -
+2025-04-12 18:18:49,241 INFO: 192.168.1.3 - - [12/Apr/2025 18:18:49] "[33mGET / HTTP/1.1[0m" 404 -
+2025-04-12 18:18:49,552 INFO: 192.168.1.3 - - [12/Apr/2025 18:18:49] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-12 18:30:38,690 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 18:30:38,700 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 18:30:38,701 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 18:30:38,703 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 18:30:39,771 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 18:30:40,270 WARNING:  * Debugger is active!
+2025-04-12 18:30:40,281 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 18:30:49,391 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 18:30:49,392 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 18:30:49,402 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 18:30:49,839 WARNING:  * Debugger is active!
+2025-04-12 18:30:49,850 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 18:30:55,879 INFO:  * Detected change in 'C:\\Users\\User\\anaconda3\\Lib\\site-packages\\flask_cors\\extension.py', reloading
+2025-04-12 18:30:55,884 INFO: 192.168.1.3 - - [12/Apr/2025 18:30:55] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-04-12 18:30:56,035 INFO: 192.168.1.3 - - [12/Apr/2025 18:30:56] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-04-12 18:30:56,036 INFO: 192.168.1.3 - - [12/Apr/2025 18:30:56] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-04-12 18:30:56,076 INFO: 192.168.1.3 - - [12/Apr/2025 18:30:56] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-04-12 18:30:56,137 INFO: 192.168.1.3 - - [12/Apr/2025 18:30:56] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-04-12 18:30:57,277 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 18:30:57,713 WARNING:  * Debugger is active!
+2025-04-12 18:30:57,723 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 18:34:54,633 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 18:34:54,633 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 18:34:54,645 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 18:34:55,080 WARNING:  * Debugger is active!
+2025-04-12 18:34:55,090 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 18:35:00,192 INFO: 192.168.1.3 - - [12/Apr/2025 18:35:00] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-04-12 18:35:00,340 INFO: 192.168.1.3 - - [12/Apr/2025 18:35:00] "[36mGET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-04-12 18:35:00,359 INFO: 192.168.1.3 - - [12/Apr/2025 18:35:00] "[36mGET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-04-12 18:35:00,376 INFO: 192.168.1.3 - - [12/Apr/2025 18:35:00] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-04-12 18:35:00,446 INFO: 192.168.1.3 - - [12/Apr/2025 18:35:00] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-04-12 18:38:09,798 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 18:38:09,799 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 18:38:09,809 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 18:38:10,316 WARNING:  * Debugger is active!
+2025-04-12 18:38:10,328 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 18:38:12,267 INFO: 127.0.0.1 - - [12/Apr/2025 18:38:12] "GET / HTTP/1.1" 200 -
+2025-04-12 18:39:30,458 INFO: 127.0.0.1 - - [12/Apr/2025 18:39:30] "GET / HTTP/1.1" 200 -
+2025-04-12 18:46:49,647 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 18:46:49,648 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 18:46:49,658 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 18:46:50,109 WARNING:  * Debugger is active!
+2025-04-12 18:46:50,121 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 18:46:53,920 INFO: 127.0.0.1 - - [12/Apr/2025 18:46:53] "GET / HTTP/1.1" 200 -
+2025-04-12 18:47:07,319 INFO: 127.0.0.1 - - [12/Apr/2025 18:47:07] "GET / HTTP/1.1" 200 -
+2025-04-12 18:49:17,748 INFO: 127.0.0.1 - - [12/Apr/2025 18:49:17] "[33mPOST /api/routes HTTP/1.1[0m" 404 -
+2025-04-12 18:56:02,095 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 18:56:02,096 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 18:56:02,096 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 18:56:03,152 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 18:56:03,659 WARNING:  * Debugger is active!
+2025-04-12 18:56:03,670 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 18:56:12,878 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 18:56:12,878 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 18:56:12,887 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 18:56:13,381 WARNING:  * Debugger is active!
+2025-04-12 18:56:13,392 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 18:56:15,996 INFO: 127.0.0.1 - - [12/Apr/2025 18:56:15] "GET / HTTP/1.1" 200 -
+2025-04-12 18:56:19,936 INFO: 127.0.0.1 - - [12/Apr/2025 18:56:19] "GET / HTTP/1.1" 200 -
+2025-04-12 18:56:28,857 INFO: 127.0.0.1 - - [12/Apr/2025 18:56:28] "GET / HTTP/1.1" 200 -
+2025-04-12 19:32:24,788 INFO: 127.0.0.1 - - [12/Apr/2025 19:32:24] "GET / HTTP/1.1" 200 -
+2025-04-12 20:48:43,102 INFO: 127.0.0.1 - - [12/Apr/2025 20:48:43] "GET / HTTP/1.1" 200 -
+2025-04-12 20:48:51,128 INFO: 127.0.0.1 - - [12/Apr/2025 20:48:51] "GET / HTTP/1.1" 200 -
+2025-04-12 20:49:15,522 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 20:49:15,523 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 20:49:15,539 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 20:49:15,972 WARNING:  * Debugger is active!
+2025-04-12 20:49:15,995 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 20:49:17,653 INFO: 127.0.0.1 - - [12/Apr/2025 20:49:17] "GET / HTTP/1.1" 200 -
+2025-04-12 20:54:33,479 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 20:54:33,479 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 20:54:33,489 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 20:54:33,905 WARNING:  * Debugger is active!
+2025-04-12 20:54:33,916 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 20:54:38,684 INFO: 127.0.0.1 - - [12/Apr/2025 20:54:38] "GET / HTTP/1.1" 200 -
+2025-04-12 20:54:42,263 INFO: 127.0.0.1 - - [12/Apr/2025 20:54:42] "GET / HTTP/1.1" 200 -
+2025-04-12 20:54:47,089 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 20:54:47,090 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 20:54:47,090 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 20:54:47,093 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 20:54:48,147 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 20:54:48,649 WARNING:  * Debugger is active!
+2025-04-12 20:54:48,662 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 20:54:49,449 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 20:54:49,458 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 20:54:50,510 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 20:54:51,065 WARNING:  * Debugger is active!
+2025-04-12 20:54:51,082 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 20:54:56,357 INFO: 127.0.0.1 - - [12/Apr/2025 20:54:56] "GET / HTTP/1.1" 200 -
+2025-04-12 20:55:04,986 INFO: 127.0.0.1 - - [12/Apr/2025 20:55:04] "GET / HTTP/1.1" 200 -
+2025-04-12 21:01:23,755 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 21:01:23,756 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 21:01:23,765 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 21:01:24,216 WARNING:  * Debugger is active!
+2025-04-12 21:01:24,227 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 21:01:27,230 INFO: 127.0.0.1 - - [12/Apr/2025 21:01:27] "GET / HTTP/1.1" 200 -
+2025-04-12 21:01:31,551 INFO: 127.0.0.1 - - [12/Apr/2025 21:01:31] "GET / HTTP/1.1" 200 -
+2025-04-12 21:01:31,974 INFO: 127.0.0.1 - - [12/Apr/2025 21:01:31] "GET / HTTP/1.1" 200 -
+2025-04-12 21:01:32,832 INFO: 127.0.0.1 - - [12/Apr/2025 21:01:32] "GET / HTTP/1.1" 200 -
+2025-04-12 21:03:58,249 INFO:  * Detected change in 'C:\\Users\\User\\anaconda3\\Lib\\datetime.py', reloading
+2025-04-12 21:03:59,295 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 21:03:59,749 WARNING:  * Debugger is active!
+2025-04-12 21:03:59,760 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 21:04:09,486 INFO:  * Detected change in 'C:\\Users\\User\\anaconda3\\Lib\\site-packages\\flask\\blueprints.py', reloading
+2025-04-12 21:04:09,562 INFO:  * Detected change in 'C:\\Users\\User\\anaconda3\\Lib\\site-packages\\flask_cors\\extension.py', reloading
+2025-04-12 21:04:10,630 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 21:04:11,122 WARNING:  * Debugger is active!
+2025-04-12 21:04:11,133 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 21:04:16,770 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 21:04:16,779 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 21:04:16,779 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 21:04:17,986 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 21:04:18,447 WARNING:  * Debugger is active!
+2025-04-12 21:04:18,457 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 21:04:57,825 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 21:04:57,825 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 21:04:57,835 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 21:04:58,249 WARNING:  * Debugger is active!
+2025-04-12 21:04:58,260 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 21:05:02,847 INFO: 127.0.0.1 - - [12/Apr/2025 21:05:02] "GET / HTTP/1.1" 200 -
+2025-04-12 21:05:04,479 INFO: 127.0.0.1 - - [12/Apr/2025 21:05:04] "GET / HTTP/1.1" 200 -
+2025-04-12 21:05:05,230 INFO: 127.0.0.1 - - [12/Apr/2025 21:05:05] "GET / HTTP/1.1" 200 -
+2025-04-12 21:07:16,302 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 21:07:16,302 INFO:  * Detected change in 'e:\\Trans-IT\\BackEnd\\app.py', reloading
+2025-04-12 21:07:17,353 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 21:07:17,845 WARNING:  * Debugger is active!
+2025-04-12 21:07:17,857 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 21:07:26,851 INFO: 127.0.0.1 - - [12/Apr/2025 21:07:26] "GET / HTTP/1.1" 200 -
+2025-04-12 21:07:27,984 INFO: 127.0.0.1 - - [12/Apr/2025 21:07:27] "GET / HTTP/1.1" 200 -
+2025-04-12 21:07:28,598 INFO: 127.0.0.1 - - [12/Apr/2025 21:07:28] "GET / HTTP/1.1" 200 -
+2025-04-12 21:15:10,960 INFO: Generated 4 routes for [{'lat': 51.505, 'lng': -0.09}, {'lat': 51.51, 'lng': -0.1}]
+2025-04-12 21:15:10,964 INFO: 127.0.0.1 - - [12/Apr/2025 21:15:10] "POST /api/routes HTTP/1.1" 200 -
+2025-04-12 21:23:34,235 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 21:23:34,235 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 21:23:34,242 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 21:23:34,715 WARNING:  * Debugger is active!
+2025-04-12 21:23:34,727 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 21:23:37,580 INFO: 127.0.0.1 - - [12/Apr/2025 21:23:37] "GET / HTTP/1.1" 200 -
+2025-04-12 21:29:19,138 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 21:29:19,138 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 21:29:19,146 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 21:29:19,571 WARNING:  * Debugger is active!
+2025-04-12 21:29:19,581 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 21:29:24,144 INFO: 127.0.0.1 - - [12/Apr/2025 21:29:24] "GET / HTTP/1.1" 200 -
+2025-04-12 21:29:42,729 INFO: 127.0.0.1 - - [12/Apr/2025 21:29:42] "GET / HTTP/1.1" 200 -
+2025-04-12 21:29:52,975 INFO: 127.0.0.1 - - [12/Apr/2025 21:29:52] "GET / HTTP/1.1" 200 -
+2025-04-12 21:29:53,912 INFO: 127.0.0.1 - - [12/Apr/2025 21:29:53] "GET / HTTP/1.1" 200 -
+2025-04-12 21:30:05,077 INFO: 127.0.0.1 - - [12/Apr/2025 21:30:05] "GET / HTTP/1.1" 200 -
+2025-04-12 21:36:21,048 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 21:36:21,049 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 21:36:21,058 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 21:36:21,503 WARNING:  * Debugger is active!
+2025-04-12 21:36:21,514 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 21:36:25,779 INFO: 127.0.0.1 - - [12/Apr/2025 21:36:25] "GET / HTTP/1.1" 200 -
+2025-04-12 21:58:04,247 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 21:58:04,248 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 21:58:04,258 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 21:58:04,698 WARNING:  * Debugger is active!
+2025-04-12 21:58:04,710 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 21:58:12,307 INFO: 127.0.0.1 - - [12/Apr/2025 21:58:12] "GET / HTTP/1.1" 200 -
+2025-04-12 21:58:35,593 INFO: 127.0.0.1 - - [12/Apr/2025 21:58:35] "GET / HTTP/1.1" 200 -
+2025-04-12 22:11:19,084 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 22:11:19,085 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 22:11:19,095 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 22:11:19,567 WARNING:  * Debugger is active!
+2025-04-12 22:11:19,580 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 22:11:39,408 INFO: 127.0.0.1 - - [12/Apr/2025 22:11:39] "GET / HTTP/1.1" 200 -
+2025-04-12 22:15:01,662 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+2025-04-12 22:15:01,663 INFO: [33mPress CTRL+C to quit[0m
+2025-04-12 22:15:01,673 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 22:15:02,093 WARNING:  * Debugger is active!
+2025-04-12 22:15:02,104 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 22:15:04,969 INFO: 127.0.0.1 - - [12/Apr/2025 22:15:04] "GET / HTTP/1.1" 200 -
+2025-04-12 22:15:12,754 INFO: 127.0.0.1 - - [12/Apr/2025 22:15:12] "GET / HTTP/1.1" 200 -
+2025-04-12 22:15:18,572 INFO: 127.0.0.1 - - [12/Apr/2025 22:15:18] "GET / HTTP/1.1" 200 -
+2025-04-12 22:16:57,513 INFO:  * Detected change in 'C:\\Users\\User\\anaconda3\\Lib\\site-packages\\flask\\__init__.py', reloading
+2025-04-12 22:16:57,519 INFO:  * Detected change in 'C:\\Users\\User\\anaconda3\\Lib\\site-packages\\flask\\app.py', reloading
+2025-04-12 22:16:57,584 INFO:  * Detected change in 'C:\\Users\\User\\anaconda3\\Lib\\site-packages\\flask\\scaffold.py', reloading
+2025-04-12 22:16:58,648 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 22:16:59,137 WARNING:  * Debugger is active!
+2025-04-12 22:16:59,149 INFO:  * Debugger PIN: 647-848-104
+2025-04-12 22:58:01,893 INFO: 127.0.0.1 - - [12/Apr/2025 22:58:01] "GET / HTTP/1.1" 200 -
+2025-04-12 22:58:02,676 INFO: 127.0.0.1 - - [12/Apr/2025 22:58:02] "GET / HTTP/1.1" 200 -
+2025-04-12 22:58:03,291 INFO: 127.0.0.1 - - [12/Apr/2025 22:58:03] "GET / HTTP/1.1" 200 -
+2025-04-12 22:58:12,372 INFO:  * Detected change in 'C:\\Users\\User\\anaconda3\\Lib\\site-packages\\flask\\sessions.py', reloading
+2025-04-12 22:58:12,387 INFO:  * Detected change in 'C:\\Users\\User\\anaconda3\\Lib\\site-packages\\flask\\json\\tag.py', reloading
+2025-04-12 22:58:13,481 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-12 22:58:14,003 WARNING:  * Debugger is active!
+2025-04-12 22:58:14,015 INFO:  * Debugger PIN: 647-848-104
+2025-04-13 08:39:39,209 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.137.43:5000
+2025-04-13 08:39:39,210 INFO: [33mPress CTRL+C to quit[0m
+2025-04-13 08:39:39,219 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-13 08:39:39,689 WARNING:  * Debugger is active!
+2025-04-13 08:39:39,701 INFO:  * Debugger PIN: 647-848-104
+2025-04-13 08:39:41,293 INFO: 127.0.0.1 - - [13/Apr/2025 08:39:41] "GET / HTTP/1.1" 200 -
+2025-04-13 08:39:41,637 INFO: 127.0.0.1 - - [13/Apr/2025 08:39:41] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-13 08:40:48,119 INFO: 127.0.0.1 - - [13/Apr/2025 08:40:48] "[33mGET /static/favicon.ico HTTP/1.1[0m" 404 -
+2025-04-13 08:50:55,049 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.137.43:5000
+2025-04-13 08:50:55,059 INFO: [33mPress CTRL+C to quit[0m
+2025-04-13 08:50:55,065 INFO:  * Restarting with watchdog (windowsapi)
+2025-04-13 08:50:55,474 WARNING:  * Debugger is active!
+2025-04-13 08:50:55,485 INFO:  * Debugger PIN: 647-848-104
+2025-04-13 08:51:11,814 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:11] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:17,088 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:17] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:18,231 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:18] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:18,849 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:18] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:19,230 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:19] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:19,441 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:19] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:19,631 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:19] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:19,826 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:19] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:20,013 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:20] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:20,228 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:20] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:20,396 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:20] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:20,616 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:20] "GET / HTTP/1.1" 200 -
+2025-04-13 08:51:36,670 INFO: 127.0.0.1 - - [13/Apr/2025 08:51:36] "GET / HTTP/1.1" 200 -
